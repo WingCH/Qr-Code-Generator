@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 import 'pages/home/view.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final storage = await HydratedStorage.build(
+    storageDirectory: HydratedStorage.webStorageDirectory,
+  );
+
+  HydratedBlocOverrides.runZoned(
+    () => runApp(const MyApp()),
+    blocObserver: AppObserver(),
+    storage: storage,
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -13,7 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Qr Code Generator',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -22,3 +33,10 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class AppObserver extends BlocObserver {
+  @override
+  void onChange(BlocBase bloc, Change change) {
+    super.onChange(bloc, change);
+    print('${bloc.runtimeType} $change');
+  }
+}
