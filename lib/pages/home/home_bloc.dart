@@ -13,6 +13,19 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with HydratedMixin {
     on<HomeQrCodeDataEntered>((event, emit) {
       emit(state.copyWith(qrCodeData: event.qrCodeData));
     });
+    on<HomeQrCodeDataRecordAdded>((event, emit) {
+      Set<String> qrCodeHistories = state.qrCodeHistories.toSet();
+      qrCodeHistories.add(event.qrCodeData);
+      emit(state.copyWith(qrCodeHistories: qrCodeHistories.toList()));
+    });
+    on<HomeQrCodeDataRecordSelected>((event, emit) {
+      emit(state.copyWith(qrCodeData: event.qrCodeData));
+    });
+    on<HomeQrCodeDataRecordRemoved>((event, emit) {
+      Set<String> qrCodeHistories = state.qrCodeHistories.toSet();
+      qrCodeHistories.remove(event.qrCodeData);
+      emit(state.copyWith(qrCodeHistories: qrCodeHistories.toList()));
+    });
   }
 
   @override

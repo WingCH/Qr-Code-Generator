@@ -32,7 +32,7 @@ class HomeState extends Equatable {
   Map<String, dynamic> toJson() {
     return {
       'qrCodeData': qrCodeData,
-      'qrCodeHistories': List<dynamic>.from(qrCodeHistories.map((x) => x)),
+      'qrCodeHistories': List<String>.from(qrCodeHistories.map((x) => x)),
     };
   }
 

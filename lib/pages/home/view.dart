@@ -26,6 +26,7 @@ class _HomePage extends StatefulWidget {
 
 class _HomePageState extends State<_HomePage> {
   late TextEditingController _qrCodeDataController;
+  final _qrCodeDataFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -67,39 +68,56 @@ class _HomePageState extends State<_HomePage> {
                 ),
                 TextField(
                   controller: _qrCodeDataController,
+                  focusNode: _qrCodeDataFocusNode,
                   decoration: const InputDecoration(
                     labelText: 'Enter a string',
                   ),
                   onChanged: (value) {
                     context.read<HomeBloc>().add(HomeQrCodeDataEntered(value));
                   },
+                  onSubmitted: (value) {
+                    context
+                        .read<HomeBloc>()
+                        .add(HomeQrCodeDataRecordAdded(value));
+                    _qrCodeDataFocusNode.requestFocus();
+                  },
                 ),
-                // const SizedBox(height: 16),
-                // Column(
-                //   crossAxisAlignment: CrossAxisAlignment.stretch,
-                //   children: [
-                //     Text('History', style: Theme.of(context).textTheme.headline6),
-                //     const SizedBox(height: 8),
-                //     Wrap(
-                //       crossAxisAlignment: WrapCrossAlignment.start,
-                //       children: [
-                //         InputChip(
-                //           label: Text('Generate'),
-                //           onDeleted: () {
-                //             setState(() {
-                //               _qrCodeData = '';
-                //             });
-                //           },
-                //           onPressed: () {
-                //             setState(() {
-                //               _qrCodeData = 'Hello, world!';
-                //             });
-                //           },
-                //         )
-                //       ],
-                //     ),
-                //   ],
-                // ),
+                const SizedBox(height: 16),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text('History',
+                        style: Theme.of(context).textTheme.headline6),
+                    const SizedBox(height: 8),
+                    BlocSelector<HomeBloc, HomeState, List<String>>(
+                      selector: (state) {
+                        return state.qrCodeHistories;
+                      },
+                      builder: (context, qrCodeHistories) {
+                        return Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.start,
+                          runSpacing: 8,
+                          spacing: 8,
+                          children: [
+                            ...qrCodeHistories.map((qrCodeData) {
+                              return InputChip(
+                                label: Text(qrCodeData),
+                                onPressed: () {
+                                  context.read<HomeBloc>().add(
+                                      HomeQrCodeDataRecordSelected(qrCodeData));
+                                },
+                                onDeleted: () {
+                                  context.read<HomeBloc>().add(
+                                      HomeQrCodeDataRecordRemoved(qrCodeData));
+                                },
+                              );
+                            }),
+                          ],
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ],
             ),
           ),

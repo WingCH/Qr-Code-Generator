@@ -12,3 +12,30 @@ class HomeQrCodeDataEntered extends HomeEvent {
   @override
   List<Object> get props => [qrCodeData];
 }
+
+class HomeQrCodeDataRecordAdded extends HomeEvent {
+  final String qrCodeData;
+
+  const HomeQrCodeDataRecordAdded(this.qrCodeData);
+
+  @override
+  List<Object> get props => [qrCodeData];
+}
+
+class HomeQrCodeDataRecordSelected extends HomeEvent {
+  final String qrCodeData;
+
+  const HomeQrCodeDataRecordSelected(this.qrCodeData);
+
+  @override
+  List<Object> get props => [qrCodeData];
+}
+
+class HomeQrCodeDataRecordRemoved extends HomeEvent {
+  final String qrCodeData;
+
+  const HomeQrCodeDataRecordRemoved(this.qrCodeData);
+
+  @override
+  List<Object> get props => [qrCodeData];
+}
