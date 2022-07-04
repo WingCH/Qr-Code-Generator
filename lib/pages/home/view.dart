@@ -10,7 +10,6 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      lazy: false,
       create: (_) => HomeBloc(),
       child: const _HomePage(),
     );
@@ -88,6 +87,8 @@ class _HomePageState extends State<_HomePage> {
                   children: [
                     Text('History',
                         style: Theme.of(context).textTheme.headline6),
+                    Text('save in local storage',
+                        style: Theme.of(context).textTheme.subtitle1),
                     const SizedBox(height: 8),
                     BlocSelector<HomeBloc, HomeState, List<String>>(
                       selector: (state) {
