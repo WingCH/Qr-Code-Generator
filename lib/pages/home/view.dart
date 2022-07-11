@@ -71,6 +71,16 @@ class _HomePageState extends State<_HomePage> {
                         data: qrCodeData,
                         version: QrVersions.auto,
                         size: 200.0,
+                        dataModuleStyle: QrDataModuleStyle(
+                          color:
+                              Theme.of(context).colorScheme.onPrimaryContainer,
+                          dataModuleShape: QrDataModuleShape.square,
+                        ),
+                        eyeStyle: QrEyeStyle(
+                          color:
+                              Theme.of(context).colorScheme.onPrimaryContainer,
+                          eyeShape: QrEyeShape.square,
+                        ),
                       );
                     },
                   ),
