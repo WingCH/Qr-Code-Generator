@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:seo_renderer/seo_renderer.dart';
 
 import 'home_bloc.dart';
 
@@ -37,7 +38,12 @@ class _HomePageState extends State<_HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Qr Code Generator')),
+      appBar: AppBar(
+        title: const TextRenderer(
+          style: TextRendererStyle.header1,
+          child: Text('Qr Code Generator'),
+        ),
+      ),
       body: BlocListener<HomeBloc, HomeState>(
         listenWhen: (previous, current) =>
             previous.qrCodeData != current.qrCodeData,
@@ -53,17 +59,21 @@ class _HomePageState extends State<_HomePage> {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                BlocSelector<HomeBloc, HomeState, String>(
-                  selector: (state) {
-                    return state.qrCodeData;
-                  },
-                  builder: (context, qrCodeData) {
-                    return QrImage(
-                      data: qrCodeData,
-                      version: QrVersions.auto,
-                      size: 200.0,
-                    );
-                  },
+                TextRenderer(
+                  text: 'Qr Code image',
+                  style: TextRendererStyle.header2,
+                  child: BlocSelector<HomeBloc, HomeState, String>(
+                    selector: (state) {
+                      return state.qrCodeData;
+                    },
+                    builder: (context, qrCodeData) {
+                      return QrImage(
+                        data: qrCodeData,
+                        version: QrVersions.auto,
+                        size: 200.0,
+                      );
+                    },
+                  ),
                 ),
                 TextField(
                   controller: _qrCodeDataController,
@@ -82,42 +92,48 @@ class _HomePageState extends State<_HomePage> {
                   },
                 ),
                 const SizedBox(height: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text('History',
-                        style: Theme.of(context).textTheme.headline6),
-                    Text('save in local storage',
-                        style: Theme.of(context).textTheme.subtitle1),
-                    const SizedBox(height: 8),
-                    BlocSelector<HomeBloc, HomeState, List<String>>(
-                      selector: (state) {
-                        return state.qrCodeHistories;
-                      },
-                      builder: (context, qrCodeHistories) {
-                        return Wrap(
-                          crossAxisAlignment: WrapCrossAlignment.start,
-                          runSpacing: 8,
-                          spacing: 8,
-                          children: [
-                            ...qrCodeHistories.map((qrCodeData) {
-                              return InputChip(
-                                label: Text(qrCodeData),
-                                onPressed: () {
-                                  context.read<HomeBloc>().add(
-                                      HomeQrCodeDataRecordSelected(qrCodeData));
-                                },
-                                onDeleted: () {
-                                  context.read<HomeBloc>().add(
-                                      HomeQrCodeDataRecordRemoved(qrCodeData));
-                                },
-                              );
-                            }),
-                          ],
-                        );
-                      },
-                    ),
-                  ],
+                TextRenderer(
+                  text: 'Qr Code History',
+                  style: TextRendererStyle.header3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text('History',
+                          style: Theme.of(context).textTheme.headline6),
+                      Text('save in local storage',
+                          style: Theme.of(context).textTheme.subtitle1),
+                      const SizedBox(height: 8),
+                      BlocSelector<HomeBloc, HomeState, List<String>>(
+                        selector: (state) {
+                          return state.qrCodeHistories;
+                        },
+                        builder: (context, qrCodeHistories) {
+                          return Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.start,
+                            runSpacing: 8,
+                            spacing: 8,
+                            children: [
+                              ...qrCodeHistories.map((qrCodeData) {
+                                return InputChip(
+                                  label: Text(qrCodeData),
+                                  onPressed: () {
+                                    context.read<HomeBloc>().add(
+                                        HomeQrCodeDataRecordSelected(
+                                            qrCodeData));
+                                  },
+                                  onDeleted: () {
+                                    context.read<HomeBloc>().add(
+                                        HomeQrCodeDataRecordRemoved(
+                                            qrCodeData));
+                                  },
+                                );
+                              }),
+                            ],
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
