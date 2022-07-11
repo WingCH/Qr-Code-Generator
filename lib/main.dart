@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:seo_renderer/seo_renderer.dart';
 
 import 'firebase_options.dart';
 import 'pages/home/view.dart';
@@ -27,12 +28,16 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Qr Code Generator',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return RobotDetector(
+      debug: true,
+      child: MaterialApp(
+        title: 'Qr Code Generator',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const HomePage(),
+        navigatorObservers: [seoRouteObserver],
       ),
-      home: const HomePage(),
     );
   }
 }
