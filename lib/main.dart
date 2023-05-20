@@ -8,19 +8,17 @@ import 'package:seo_renderer/seo_renderer.dart';
 import 'firebase_options.dart';
 import 'pages/home/view.dart';
 
+// ISSUE: https://github.com/flutter/flutter/issues/126713
+// cannot build now because of this issue
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  final storage = await HydratedStorage.build(
+  Bloc.observer = AppObserver();
+  HydratedBloc.storage = await HydratedStorage.build(
     storageDirectory: HydratedStorage.webStorageDirectory,
-  );
-
-  HydratedBlocOverrides.runZoned(
-    () => runApp(const MyApp()),
-    blocObserver: AppObserver(),
-    storage: storage,
   );
 }
 

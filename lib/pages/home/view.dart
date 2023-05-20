@@ -68,7 +68,7 @@ class _HomePageState extends State<_HomePage> {
                         return state.qrCodeData;
                       },
                       builder: (context, qrCodeData) {
-                        return QrImage(
+                        return QrImageView(
                           data: qrCodeData,
                           version: QrVersions.auto,
                           size: 200.0,
@@ -105,8 +105,8 @@ class _HomePageState extends State<_HomePage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Text('History', style: Theme.of(context).textTheme.headline6),
-                        Text('save in local storage', style: Theme.of(context).textTheme.subtitle1),
+                        Text('History', style: Theme.of(context).textTheme.titleLarge),
+                        Text('save in local storage', style: Theme.of(context).textTheme.titleMedium),
                         const SizedBox(height: 8),
                         BlocSelector<HomeBloc, HomeState, List<String>>(
                           selector: (state) {
