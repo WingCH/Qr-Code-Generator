@@ -51,20 +51,20 @@ class MyApp extends StatelessWidget {
           swapLegacyOnMaterial3: true,
           fontFamily: GoogleFonts.notoSans().fontFamily,
         ),
-        darkTheme: FlexThemeData.dark(
-          scheme: FlexScheme.hippieBlue,
-          surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
-          blendLevel: 13,
-          subThemesData: const FlexSubThemesData(
-            blendOnLevel: 20,
-            useM2StyleDividerInM3: true,
-          ),
-          visualDensity: FlexColorScheme.comfortablePlatformDensity,
-          useMaterial3: true,
-          swapLegacyOnMaterial3: true,
-          fontFamily: GoogleFonts.notoSans().fontFamily,
-        ),
-        themeMode: ThemeMode.system,
+        // darkTheme: FlexThemeData.dark(
+        //   scheme: FlexScheme.hippieBlue,
+        //   surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
+        //   blendLevel: 13,
+        //   subThemesData: const FlexSubThemesData(
+        //     blendOnLevel: 20,
+        //     useM2StyleDividerInM3: true,
+        //   ),
+        //   visualDensity: FlexColorScheme.comfortablePlatformDensity,
+        //   useMaterial3: true,
+        //   swapLegacyOnMaterial3: true,
+        //   fontFamily: GoogleFonts.notoSans().fontFamily,
+        // ),
+        themeMode: ThemeMode.light,
       ),
     );
   }
