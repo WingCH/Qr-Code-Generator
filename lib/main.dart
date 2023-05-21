@@ -8,9 +8,6 @@ import 'package:seo_renderer/seo_renderer.dart';
 import 'firebase_options.dart';
 import 'pages/home/view.dart';
 
-// ISSUE: https://github.com/flutter/flutter/issues/126713
-// cannot build now because of this issue
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -20,6 +17,7 @@ Future<void> main() async {
   HydratedBloc.storage = await HydratedStorage.build(
     storageDirectory: HydratedStorage.webStorageDirectory,
   );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
