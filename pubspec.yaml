@@ -44,6 +44,7 @@ dependencies:
   seo_renderer: ^0.6.0
   flex_color_scheme: ^7.1.2
   google_fonts: ^4.0.4
+  peanut: ^5.0.0
 
 dev_dependencies:
   flutter_test:
