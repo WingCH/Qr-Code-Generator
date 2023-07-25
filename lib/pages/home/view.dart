@@ -102,38 +102,53 @@ class _HomePageState extends State<_HomePage> {
                   TextRenderer(
                     text: 'Qr Code History',
                     style: TextRendererStyle.header3,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text('History', style: Theme.of(context).textTheme.titleLarge),
-                        Text('save in local storage', style: Theme.of(context).textTheme.titleMedium),
-                        const SizedBox(height: 8),
-                        BlocSelector<HomeBloc, HomeState, List<String>>(
-                          selector: (state) {
-                            return state.qrCodeHistories;
-                          },
-                          builder: (context, qrCodeHistories) {
-                            return Wrap(
-                              crossAxisAlignment: WrapCrossAlignment.start,
-                              runSpacing: 8,
-                              spacing: 8,
-                              children: [
-                                ...qrCodeHistories.map((qrCodeData) {
-                                  return InputChip(
-                                    label: Text(qrCodeData),
-                                    onPressed: () {
-                                      context.read<HomeBloc>().add(HomeQrCodeDataRecordSelected(qrCodeData));
+                    child: Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text('History', style: Theme.of(context).textTheme.titleLarge),
+                          Text('save in local storage', style: Theme.of(context).textTheme.titleMedium),
+                          Expanded(
+                            child: ScrollConfiguration(
+                              behavior: const ScrollBehavior().copyWith(scrollbars: false),
+                              child: SingleChildScrollView(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  child: BlocSelector<HomeBloc, HomeState, List<String>>(
+                                    selector: (state) {
+                                      return state.qrCodeHistories;
                                     },
-                                    onDeleted: () {
-                                      context.read<HomeBloc>().add(HomeQrCodeDataRecordRemoved(qrCodeData));
+                                    builder: (context, qrCodeHistories) {
+                                      return Wrap(
+                                        crossAxisAlignment: WrapCrossAlignment.start,
+                                        runSpacing: 8,
+                                        spacing: 8,
+                                        children: [
+                                          ...qrCodeHistories.map((qrCodeData) {
+                                            return InputChip(
+                                              label: Text(
+                                                qrCodeData,
+                                                maxLines: 5,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              onPressed: () {
+                                                context.read<HomeBloc>().add(HomeQrCodeDataRecordSelected(qrCodeData));
+                                              },
+                                              onDeleted: () {
+                                                context.read<HomeBloc>().add(HomeQrCodeDataRecordRemoved(qrCodeData));
+                                              },
+                                            );
+                                          }),
+                                        ],
+                                      );
                                     },
-                                  );
-                                }),
-                              ],
-                            );
-                          },
-                        ),
-                      ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
