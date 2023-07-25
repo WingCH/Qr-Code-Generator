@@ -20,5 +20,7 @@ samples, guidance on mobile development, and a full API reference.
 ## Production
 
 ```
- fvm flutter pub global run peanut -b production
+ fvm flutter pub global run peanut
 ```
+
+push to git 
