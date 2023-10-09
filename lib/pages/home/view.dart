@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:seo_renderer/seo_renderer.dart';
@@ -41,6 +42,7 @@ class _HomePageState extends State<_HomePage> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
         appBar: AppBar(
+          systemOverlayStyle: SystemUiOverlayStyle(statusBarColor: Theme.of(context).colorScheme.primary),
           title: const TextRenderer(
             style: TextRendererStyle.header1,
             child: Text('Qr Code Generator'),
