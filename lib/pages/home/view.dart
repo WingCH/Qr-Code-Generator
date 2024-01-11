@@ -83,24 +83,26 @@ class _HomePageState extends State<_HomePage> {
                                 onHover = isHovering;
                               });
                             },
-                            onTap: () {
-                              screenshotController.capture().then((Uint8List? image) {
+                            onTap: () async {
+                              final scaffoldMessenger = ScaffoldMessenger.of(context);
+                              try {
+                                final Uint8List? image = await screenshotController.capture();
                                 if (image != null) {
                                   final base64Image = base64Encode(image);
                                   js.context.callMethod('copyBase64ImageToClipboard', [base64Image]);
-                                  ScaffoldMessenger.of(context).showSnackBar(
+                                  scaffoldMessenger.showSnackBar(
                                     const SnackBar(
                                       content: Text('Copied to clipboard'),
                                     ),
                                   );
                                 }
-                              }).catchError((onError) {
-                                ScaffoldMessenger.of(context).showSnackBar(
+                              } catch (error, _) {
+                                scaffoldMessenger.showSnackBar(
                                   SnackBar(
-                                    content: Text(onError.toString()),
+                                    content: Text(error.toString()),
                                   ),
                                 );
-                              });
+                              }
                             },
                             child: Stack(
                               alignment: Alignment.center,
