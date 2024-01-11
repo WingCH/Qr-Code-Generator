@@ -110,6 +110,7 @@ class _HomePageState extends State<_HomePage> {
                                   child: QrImageView(
                                     data: qrCodeData,
                                     version: QrVersions.auto,
+                                    backgroundColor: Theme.of(context).colorScheme.onPrimary,
                                     size: 200.0,
                                     dataModuleStyle: QrDataModuleStyle(
                                       color: Theme.of(context).colorScheme.onPrimaryContainer,
