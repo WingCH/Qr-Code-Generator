@@ -19,10 +19,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with HydratedMixin {
       emit(state.copyWith(qrCodeData: event.qrCodeData));
       _debouncer.run(() {
         FirebaseAnalytics.instance.logEvent(
-          name: 'record_entered',
-          parameters: {
-            'data': event.qrCodeData,
-          },
+          name: 'record_entered'
         );
       });
     });
@@ -31,19 +28,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with HydratedMixin {
       qrCodeHistories.add(event.qrCodeData);
       emit(state.copyWith(qrCodeHistories: qrCodeHistories.toList()));
       FirebaseAnalytics.instance.logEvent(
-        name: 'record_added',
-        parameters: {
-          'data': event.qrCodeData,
-        },
+        name: 'record_added'
       );
     });
     on<HomeQrCodeDataRecordSelected>((event, emit) {
       emit(state.copyWith(qrCodeData: event.qrCodeData));
       FirebaseAnalytics.instance.logEvent(
-        name: 'record_selected',
-        parameters: {
-          'data': event.qrCodeData,
-        },
+        name: 'record_selected'
       );
     });
     on<HomeQrCodeDataRecordRemoved>((event, emit) {
@@ -51,10 +42,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with HydratedMixin {
       qrCodeHistories.remove(event.qrCodeData);
       emit(state.copyWith(qrCodeHistories: qrCodeHistories.toList()));
       FirebaseAnalytics.instance.logEvent(
-        name: 'record_removed',
-        parameters: {
-          'data': event.qrCodeData,
-        },
+        name: 'record_removed'
       );
     });
   }
