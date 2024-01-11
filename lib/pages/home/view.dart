@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:seo_renderer/seo_renderer.dart';
+import "dart:js" as js;
+import 'dart:convert';
 
 import 'home_bloc.dart';
 
@@ -28,6 +31,8 @@ class _HomePage extends StatefulWidget {
 class _HomePageState extends State<_HomePage> {
   late TextEditingController _qrCodeDataController;
   final _qrCodeDataFocusNode = FocusNode();
+  var onHover = false;
+  final ScreenshotController screenshotController = ScreenshotController();
 
   @override
   void initState() {
@@ -65,25 +70,77 @@ class _HomePageState extends State<_HomePage> {
                   TextRenderer(
                     text: 'Qr Code image',
                     style: TextRendererStyle.header2,
-                    child: BlocSelector<HomeBloc, HomeState, String>(
-                      selector: (state) {
-                        return state.qrCodeData;
-                      },
-                      builder: (context, qrCodeData) {
-                        return QrImageView(
-                          data: qrCodeData,
-                          version: QrVersions.auto,
-                          size: 200.0,
-                          dataModuleStyle: QrDataModuleStyle(
-                            color: Theme.of(context).colorScheme.onPrimaryContainer,
-                            dataModuleShape: QrDataModuleShape.square,
-                          ),
-                          eyeStyle: QrEyeStyle(
-                            color: Theme.of(context).colorScheme.onPrimaryContainer,
-                            eyeShape: QrEyeShape.square,
-                          ),
-                        );
-                      },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: BlocSelector<HomeBloc, HomeState, String>(
+                        selector: (state) {
+                          return state.qrCodeData;
+                        },
+                        builder: (context, qrCodeData) {
+                          return InkWell(
+                            onHover: (isHovering) {
+                              setState(() {
+                                onHover = isHovering;
+                              });
+                            },
+                            onTap: () {
+                              screenshotController.capture().then((Uint8List? image) {
+                                if (image != null) {
+                                  final base64Image = base64Encode(image);
+                                  js.context.callMethod('copyBase64ImageToClipboard', [base64Image]);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Copied to clipboard'),
+                                    ),
+                                  );
+                                }
+                              }).catchError((onError) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(onError.toString()),
+                                  ),
+                                );
+                              });
+                            },
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Screenshot(
+                                  controller: screenshotController,
+                                  child: QrImageView(
+                                    data: qrCodeData,
+                                    version: QrVersions.auto,
+                                    size: 200.0,
+                                    dataModuleStyle: QrDataModuleStyle(
+                                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                                      dataModuleShape: QrDataModuleShape.square,
+                                    ),
+                                    eyeStyle: QrEyeStyle(
+                                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                                      eyeShape: QrEyeShape.square,
+                                    ),
+                                  ),
+                                ),
+                                AnimatedOpacity(
+                                  opacity: onHover ? 1 : 0,
+                                  duration: const Duration(milliseconds: 200),
+                                  child: Text('Tap to copy',
+                                      style: Theme.of(context).primaryTextTheme.titleLarge?.copyWith(
+                                        color: Theme.of(context).colorScheme.onPrimary,
+                                        fontWeight: FontWeight.bold,
+                                        shadows: [
+                                          Shadow(
+                                            color: Theme.of(context).colorScheme.inverseSurface,
+                                            blurRadius: 10,
+                                          ),
+                                        ],
+                                      )),
+                                )
+                              ],
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                   TextField(
