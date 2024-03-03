@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:seo_renderer/seo_renderer.dart';
 import "dart:js" as js;
 import 'dart:convert';
 
 import 'home_bloc.dart';
+import 'screenshot_capture_view.dart';
+import 'widgets/qr_code_view.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -86,16 +87,23 @@ class _HomePageState extends State<_HomePage> {
                             onTap: () async {
                               final scaffoldMessenger = ScaffoldMessenger.of(context);
                               try {
-                                final Uint8List? image = await screenshotController.capture();
-                                if (image != null) {
-                                  final base64Image = base64Encode(image);
-                                  js.context.callMethod('copyBase64ImageToClipboard', [base64Image]);
-                                  scaffoldMessenger.showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Copied to clipboard'),
-                                    ),
-                                  );
-                                }
+                                final Uint8List image = await screenshotController.captureFromLongWidget(
+                                  ScreenshotCaptureView(
+                                    qrCodeData: qrCodeData,
+                                    qrCodeColor: Theme.of(context).colorScheme.onPrimaryContainer,
+                                  ),
+                                  context: context,
+                                  pixelRatio: 3,
+                                  constraints: const BoxConstraints(maxHeight: 1000),
+                                  delay: const Duration(milliseconds: 100),
+                                );
+                                final base64Image = base64Encode(image);
+                                js.context.callMethod('copyBase64ImageToClipboard', [base64Image]);
+                                scaffoldMessenger.showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Copied to clipboard'),
+                                  ),
+                                );
                               } catch (error, _) {
                                 scaffoldMessenger.showSnackBar(
                                   SnackBar(
@@ -107,22 +115,8 @@ class _HomePageState extends State<_HomePage> {
                             child: Stack(
                               alignment: Alignment.center,
                               children: [
-                                Screenshot(
-                                  controller: screenshotController,
-                                  child: QrImageView(
-                                    data: qrCodeData,
-                                    version: QrVersions.auto,
-                                    backgroundColor: Theme.of(context).colorScheme.onPrimary,
-                                    size: 200.0,
-                                    dataModuleStyle: QrDataModuleStyle(
-                                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                                      dataModuleShape: QrDataModuleShape.square,
-                                    ),
-                                    eyeStyle: QrEyeStyle(
-                                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                                      eyeShape: QrEyeShape.square,
-                                    ),
-                                  ),
+                                QrCodeView(
+                                  qrCodeData: qrCodeData,
                                 ),
                                 AnimatedOpacity(
                                   opacity: onHover ? 1 : 0,
@@ -146,6 +140,14 @@ class _HomePageState extends State<_HomePage> {
                       ),
                     ),
                   ),
+                  // BlocSelector<HomeBloc, HomeState, String>(
+                  //   selector: (state) {
+                  //     return state.qrCodeData;
+                  //   },
+                  //   builder: (context, qrCodeData) {
+                  //     return ScreenshotCaptureView(qrCodeData: qrCodeData);
+                  //   },
+                  // ),
                   TextField(
                     controller: _qrCodeDataController,
                     focusNode: _qrCodeDataFocusNode,
