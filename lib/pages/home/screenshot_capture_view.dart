@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import 'widgets/qr_code_view.dart';
@@ -27,12 +28,15 @@ class ScreenshotCaptureView extends StatelessWidget {
               padding: const EdgeInsets.all(0),
             ),
             const SizedBox(height: 8),
-            Text(
-              qrCodeData,
-              style: Theme.of(context).textTheme.bodySmall,
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 5,
+            SizedBox(
+              height: 24,
+              child: AutoSizeText(
+                qrCodeData,
+                style: Theme.of(context).textTheme.bodySmall,
+                textAlign: TextAlign.center,
+                maxLines: 5,
+                minFontSize: 1,
+              ),
             ),
           ],
         ),

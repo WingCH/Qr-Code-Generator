@@ -94,7 +94,6 @@ class _HomePageState extends State<_HomePage> {
                                   ),
                                   context: context,
                                   pixelRatio: 3,
-                                  constraints: const BoxConstraints(maxHeight: 1000),
                                   delay: const Duration(milliseconds: 100),
                                 );
                                 final base64Image = base64Encode(image);
