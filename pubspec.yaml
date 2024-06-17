@@ -47,6 +47,7 @@ dependencies:
   peanut: ^5.0.0
   screenshot: ^3.0.0
   auto_size_text: ^3.0.0
+  super_clipboard: ^0.8.17
 
 dev_dependencies:
   flutter_test:

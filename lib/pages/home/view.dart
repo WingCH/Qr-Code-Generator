@@ -3,8 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:seo_renderer/seo_renderer.dart';
-import "dart:js" as js;
-import 'dart:convert';
+import 'package:super_clipboard/super_clipboard.dart';
 
 import 'home_bloc.dart';
 import 'screenshot_capture_view.dart';
@@ -96,13 +95,19 @@ class _HomePageState extends State<_HomePage> {
                                   pixelRatio: 3,
                                   delay: const Duration(milliseconds: 100),
                                 );
-                                final base64Image = base64Encode(image);
-                                js.context.callMethod('copyBase64ImageToClipboard', [base64Image]);
-                                scaffoldMessenger.showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Copied to clipboard'),
-                                  ),
-                                );
+                                final clipboard = SystemClipboard.instance;
+                                if (clipboard != null) {
+                                  final item = DataWriterItem(suggestedName: 'qrcode.png');
+                                  item.add(Formats.png.lazy(() {
+                                    return image;
+                                  }));
+                                  await clipboard.write([item]);
+                                  scaffoldMessenger.showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Copied to clipboard'),
+                                    ),
+                                  );
+                                }
                               } catch (error, _) {
                                 scaffoldMessenger.showSnackBar(
                                   SnackBar(
